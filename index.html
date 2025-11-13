@@ -3760,14 +3760,14 @@
             <div class="contact-form-section">
               <form
                 class="contact-form"
-                action="https://formsubmit.co/chandraupendra22@gmail.com"
+                action="https://api.web3forms.com/submit"
                 method="POST"
                 onsubmit="handleFormSubmit(event);"
               >
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="box">
-                <input type="hidden" name="_next" value="">
-                <input type="hidden" name="_autoresponse" value="Thank you for contacting me! I'll get back to you soon.">
+                <input type="hidden" name="access_key" value="88cbd2df-29cf-43c0-82c0-11530b8f2fcf" />
+                <input type="hidden" name="subject" value="Portfolio Contact Form Submission" />
+                <input type="hidden" name="from_name" value="Portfolio Contact Form" />
+                <input type="hidden" name="to_email" value="chandraupendra22@gmail.com" />
                 <h3>Send a Message</h3>
                 <div class="form-group">
                   <input type="text" id="from_name" name="name" placeholder="Your Name" required />
@@ -3846,10 +3846,10 @@
         const btn = form.querySelector("button");
         const originalHTML = btn.innerHTML;
         
-        // Check if email is configured
-        const formAction = form.getAttribute('action');
-        if (formAction && formAction.includes('YOUR_EMAIL@example.com')) {
-          alert('Please replace YOUR_EMAIL@example.com with your actual email address in the form action!');
+        // Check if Web3Forms key is configured
+        const accessKeyInput = form.querySelector('input[name="access_key"]');
+        if (accessKeyInput && accessKeyInput.value === 'YOUR_WEB3FORMS_KEY') {
+          alert('Please get your free Web3Forms access key from https://web3forms.com and replace YOUR_WEB3FORMS_KEY in the form!');
           return;
         }
         
@@ -3868,20 +3868,12 @@
           }
         })
         .then(async response => {
-          // FormSubmit returns HTML or JSON depending on the response
-          const contentType = response.headers.get("content-type");
-          if (contentType && contentType.includes("application/json")) {
-            const data = await response.json();
-            if (data.success) {
-              showMessageSuccess(btn);
-              form.reset();
-            } else {
-              throw new Error(data.message || 'Form submission failed');
-            }
-          } else {
-            // If HTML response, it's still successful
+          const data = await response.json();
+          if (response.ok && data.success) {
             showMessageSuccess(btn);
             form.reset();
+          } else {
+            throw new Error(data.message || 'Form submission failed');
           }
         })
         .catch(error => {
